@@ -15,7 +15,6 @@ import { useToast } from "../components/ui/use-toast"
 import { Toaster } from "../components/ui/toast"
 import { abbreviateFileName } from '../utils/helpers'
 import { z } from 'zod'
-import { Label } from "../components/ui/label"
 
 function ThemeSwitcher() {
   const { theme, setTheme } = useTheme()
@@ -224,14 +223,14 @@ export default function CheckoutContent() {
                 />
               </div>
               <div className="mb-3">
-                <label className={`flex items-center cursor-pointer py-1 px-3 rounded text-sm font-light ${getThemeClasses()}`}>
+                <label className="flex items-center cursor-pointer py-1 px-3 rounded text-sm font-light ${getThemeClasses()}">
                   <Upload className="mr-2" size={16} />
                   {file ? abbreviateFileName(file.name) : "Upload File"}
                   <input type="file" onChange={handleFileChange} className="hidden" />
                 </label>
               </div>
               <div className="mb-3">
-                <Label htmlFor="promoCode" className="block mb-1 text-sm font-light">Promo Code</Label>
+                <label htmlFor="promoCode" className="block mb-1 text-sm font-light">Promo Code</label>
                 <div className="flex">
                   <Input
                     id="promoCode"
