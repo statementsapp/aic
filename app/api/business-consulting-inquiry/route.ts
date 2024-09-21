@@ -1,5 +1,5 @@
 import { Router } from 'next/router';
-import { BusinessConsultingInquiry } from '../../components/BusinessConsultingInquiry';
+import { BusinessConsultingInquiry } from '@/components/BusinessConsultingInquiry';
 
 export default async function handler(req: any, res: any) {
   const { method, body } = req;
