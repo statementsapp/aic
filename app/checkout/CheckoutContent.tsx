@@ -15,6 +15,7 @@ import { useToast } from "../components/ui/use-toast"
 import { Toaster } from "../components/ui/toast"
 import { abbreviateFileName } from '../utils/helpers'
 import { z } from 'zod'
+import { Label } from "../components/ui/label"
 
 function ThemeSwitcher() {
   const { theme, setTheme } = useTheme()
@@ -38,6 +39,9 @@ export default function CheckoutContent() {
   const router = useRouter()
   const { theme } = useTheme()
   const { toast } = useToast()
+  const [promoCode, setPromoCode] = useState('')
+  const [isPromoApplied, setIsPromoApplied] = useState(false)
+  const [price, setPrice] = useState(200)
 
   useEffect(() => {
     const requestId = searchParams.get('requestId')
@@ -107,6 +111,23 @@ export default function CheckoutContent() {
       })
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleApplyPromo = () => {
+    if (promoCode.toUpperCase() === 'USEAI1802') {
+      setIsPromoApplied(true)
+      setPrice(100)
+      toast({
+        title: "Promo Code Applied",
+        description: "Your discount has been applied successfully!",
+      })
+    } else {
+      toast({
+        title: "Invalid Promo Code",
+        description: "The entered promo code is not valid.",
+        variant: "destructive",
+      })
     }
   }
 
@@ -209,10 +230,33 @@ export default function CheckoutContent() {
                   <input type="file" onChange={handleFileChange} className="hidden" />
                 </label>
               </div>
+              <div className="mb-3">
+                <Label htmlFor="promoCode" className="block mb-1 text-sm font-light">Promo Code</Label>
+                <div className="flex">
+                  <Input
+                    id="promoCode"
+                    type="text"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    className={`flex-grow mr-2 p-2 border rounded-md text-sm font-light ${getThemeClasses()}`}
+                    placeholder="Enter promo code"
+                  />
+                  <Button
+                    onClick={handleApplyPromo}
+                    disabled={isPromoApplied}
+                    className={`px-4 py-2 text-sm font-light border rounded-md ${getThemeClasses()}`}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </div>
             </div>
             <div className="w-1/3 p-6 border-l border-white">
               <h2 className="text-lg font-semibold mb-2">Price</h2>
-              <p className="text-2xl font-bold mb-2">200 THB</p>
+              <p className="text-2xl font-bold mb-2">{price} THB</p>
+              {isPromoApplied && (
+                <p className="text-sm text-green-400 mb-2">Promo code applied!</p>
+              )}
               <p className="text-xs mb-4 font-light">One-time payment</p>
               <Button 
                 onClick={handleCheckout} 
