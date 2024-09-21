@@ -1,17 +1,11 @@
 "use client";
 
 import React from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import Link from 'next/link';
 
 export default function Header() {
-  const { language, setLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
-
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'th' : 'en');
-  };
 
   const toggleTheme = () => {
     setTheme(theme === 'default' ? 'modern' : theme === 'modern' ? 'vibrant' : 'default');
@@ -34,9 +28,6 @@ export default function Header() {
         UseAI
       </Link>
       <div>
-        <button onClick={toggleLanguage} className="mr-4 px-3 py-1 rounded border">
-          {language === 'en' ? 'TH' : 'EN'}
-        </button>
         <button onClick={toggleTheme} className="px-3 py-1 rounded border">
           {theme.charAt(0).toUpperCase() + theme.slice(1)}
         </button>

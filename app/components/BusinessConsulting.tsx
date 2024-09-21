@@ -1,16 +1,12 @@
 "use client";
 
 import React from 'react';
-import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { translations } from '../utils/translations';
 import Image from 'next/image';
 import Link from "next/link";
 
 export default function BusinessConsulting() {
-  const { language } = useLanguage();
   const { theme } = useTheme();
-  const t = translations[language].businessConsulting;
 
   const getThemeClasses = () => {
     switch (theme) {
