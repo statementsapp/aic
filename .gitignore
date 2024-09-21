@@ -1,0 +1,83 @@
+node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+
+# Production
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env*.local
+.env
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE-specific files
+.vscode
+.idea
+
+# Logs
+logs
+*.log
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Temporary files
+*.tmp
+*.swp
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
+
+# Dependency directories
+/.pnp
+.pnp.js
+
+# Optional: ignore the entire .next directory if not already ignored
+.next
+
+# Ignore any local database files
+*.sqlite
+
+# Ignore any large data files
+/data/*.csv
+/data/*.json
+
+# Ignore any local backups
+*.bak
+*.backup
+
+# Ignore any log files
+*.log

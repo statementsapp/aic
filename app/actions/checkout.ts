@@ -1,0 +1,1 @@
+// {{ remove this file as the action is now handled in the API route }}
