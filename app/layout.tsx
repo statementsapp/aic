@@ -4,6 +4,7 @@ import './globals.css';
 import { Metadata } from 'next';
 import Providers from './providers';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { SessionProvider } from 'next-auth/react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,7 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider>
-          <Providers>{children}</Providers>
+          <Providers>
+            <SessionProvider>{children}</SessionProvider>
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

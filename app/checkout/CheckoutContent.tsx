@@ -15,6 +15,7 @@ import { useToast } from "../components/ui/use-toast"
 import { Toaster } from "../components/ui/toast"
 import { abbreviateFileName } from '../utils/helpers'
 import { z } from 'zod'
+import { signIn, useSession } from 'next-auth/react'
 
 function ThemeSwitcher() {
   const { theme, setTheme } = useTheme()
@@ -41,6 +42,7 @@ export default function CheckoutContent() {
   const [promoCode, setPromoCode] = useState('')
   const [isPromoApplied, setIsPromoApplied] = useState(false)
   const [price, setPrice] = useState(200)
+  const { data: session } = useSession()
 
   useEffect(() => {
     const requestId = searchParams.get('requestId')
@@ -165,17 +167,6 @@ export default function CheckoutContent() {
       </header>
       <div className="flex-grow flex items-center justify-center px-4 py-8">
         <div className={`w-full max-w-4xl mx-auto rounded-lg shadow-lg border-2 border-white ${getThemeClasses()}`}>
-          <div className="flex items-center justify-between p-6 border-b border-white">
-            <h1 className="text-2xl font-bold">Checkout</h1>
-            <Button
-              variant="ghost"
-              onClick={() => router.back()}
-              className="text-sm font-light"
-            >
-              <ArrowLeft size={16} className="mr-2" />
-              Back
-            </Button>
-          </div>
           <div className="flex">
             <div className="w-2/3 p-6">
               <div className="mb-3">
@@ -260,7 +251,7 @@ export default function CheckoutContent() {
               <Button 
                 onClick={handleCheckout} 
                 disabled={isLoading}
-                className={`w-full py-2 text-sm font-light border-2 border-white flex items-center justify-center ${getThemeClasses()}`}
+                className={`w-full py-2 text-sm font-light border-2 border-white flex items-center justify-center mb-2 ${getThemeClasses()}`}
               >
                 {isLoading ? 'Processing...' : (
                   <>
@@ -271,10 +262,21 @@ export default function CheckoutContent() {
                       height={20}
                       className="mr-2"
                     />
-                    Checkout
+                    Checkout as Guest
                   </>
                 )}
               </Button>
+              {!session && (
+                <div className="text-center mt-4">
+                  <p className="text-sm mb-2">Already have an account?</p>
+                  <Button
+                    onClick={() => signIn()}
+                    className={`w-full py-2 text-sm font-light border-2 border-white ${getThemeClasses()}`}
+                  >
+                    Sign In
+                  </Button>
+                </div>
+              )}
               <div className="mt-4">
                 {guarantees.map((guarantee, index) => (
                   <div key={index} className="flex items-center mb-2">
