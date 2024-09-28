@@ -1,45 +1,63 @@
-import nodemailer from 'nodemailer'
-import type { EmailOptions } from '@/types/email'
+import { Resend } from 'resend'
 
-const transport = nodemailer.createTransport({
-  host: "live.smtp.mailtrap.io",
-  port: 587,
-  auth: {
-    user: "api",
-    pass: process.env.MAILTRAP_PASSWORD
-  },
-  secure: false, // Use STARTTLS
-})
+function getResendInstance() {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    console.error('RESEND_API_KEY is not set')
+    return null
+  }
+  console.log('Resend API Key found')
+  return new Resend(apiKey)
+}
 
-export async function sendConfirmationEmail(to: string, options: EmailOptions) {
-  const mailOptions = {
-    from: `"UseAI.th" <${process.env.EMAIL_FROM || 'noreply@useai.th'}>`,
-    to,
-    subject: 'Checkout Confirmation',
-    text: `Thank you for your purchase!\n\nPrompt: ${options.prompt}\nEmail: ${options.email}\nProduct Type: ${options.productType}\n${options.specialInstructions ? `Special Instructions: ${options.specialInstructions}\n` : ''}${options.fileName ? `File: ${options.fileName}\n` : ''}Your confirmation number is: ${options.confirmationNumber}`,
-    html: `
-      <h1>Thank you for your purchase!</h1>
-      <p><strong>Prompt:</strong> ${options.prompt}</p>
-      <p><strong>Email:</strong> ${options.email}</p>
-      <p><strong>Product Type:</strong> ${options.productType}</p>
-      ${options.specialInstructions ? `<p><strong>Special Instructions:</strong> ${options.specialInstructions}</p>` : ''}
-      ${options.fileName ? `<p><strong>File:</strong> ${options.fileName}</p>` : ''}
-      <p>Your confirmation number is: ${options.confirmationNumber}</p>
-    `,
+interface SendConfirmationEmailParams {
+  to: string
+  confirmationNumber: string
+  productType: 'text' | 'photo'
+  price: number
+}
+
+export async function sendConfirmationEmail({
+  to,
+  confirmationNumber,
+  productType,
+  price,
+}: SendConfirmationEmailParams) {
+  console.log('Sending confirmation email:', { to, confirmationNumber, productType, price })
+  const resend = getResendInstance()
+  if (!resend) {
+    console.error('Failed to create Resend instance')
+    return { error: true, message: 'Email service is not configured' }
   }
 
   try {
-    console.log('Attempting to send email to:', to)
-    const info = await transport.sendMail(mailOptions)
-    console.log('Confirmation email sent successfully to:', to)
-    console.log('Message ID:', info.messageId)
-    return info
-  } catch (error) {
-    console.error('Failed to send confirmation email:', error)
-    if (error instanceof Error) {
-      console.error('Error name:', error.name)
-      console.error('Error message:', error.message)
+    console.log('Attempting to send email via Resend')
+    const { data, error } = await resend.emails.send({
+      from: 'UseAI.in.th <noreply@useai.in.th>',
+      to: [to],
+      subject: 'Order Confirmation - UseAI.in.th',
+      html: `
+        <h1>Thank you for your order!</h1>
+        <p>Your order details:</p>
+        <ul>
+          <li>Confirmation Number: ${confirmationNumber}</li>
+          <li>Product Type: ${productType}</li>
+          <li>Price: ${price} THB</li>
+        </ul>
+        <p>We'll process your order shortly. If you have any questions, please contact our support team.</p>
+        <p>Best regards,<br>The UseAI.in.th Team</p>
+      `,
+    })
+
+    if (error) {
+      console.error('Error from Resend:', error)
+      return { error: true, message: error.message }
     }
-    throw error
+
+    console.log('Email sent successfully:', data)
+    return { error: false, data }
+  } catch (error) {
+    console.error('Unexpected error sending email:', error)
+    return { error: true, message: 'An unexpected error occurred while sending the email' }
   }
 }

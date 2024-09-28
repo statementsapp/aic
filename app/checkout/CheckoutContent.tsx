@@ -16,6 +16,7 @@ import { Toaster } from "../components/ui/toast"
 import { abbreviateFileName } from '../utils/helpers'
 import { z } from 'zod'
 import { signIn, useSession } from 'next-auth/react'
+import { sendConfirmationEmail } from '../services/email'
 
 function ThemeSwitcher() {
   const { theme, setTheme } = useTheme()
@@ -89,8 +90,21 @@ export default function CheckoutContent() {
       const result = await response.json()
 
       if (result.success) {
+        // Send confirmation email
+        const emailResponse = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: email,
+            confirmationNumber: result.data.confirmationNumber,
+            productType,
+            price,
+          }),
+        })
+        const emailResult = await emailResponse.json()
+
         let toastMessage = `Your confirmation number is: ${result.data.confirmationNumber}.`
-        if (result.data.emailInfo.error) {
+        if (emailResult.error) {
           toastMessage += " However, there was an issue sending the confirmation email. Please contact support if you don't receive it shortly."
         } else {
           toastMessage += ' A confirmation email has been sent.'
@@ -154,7 +168,7 @@ export default function CheckoutContent() {
       <header className="flex justify-between items-center py-8 relative container mx-auto px-4">
         <div className="flex items-center">
           <Sparkles className="w-8 h-8 mr-2" />
-          <span className="text-2xl font-bold tracking-tight">UseAI.th</span>
+          <span className="text-2xl font-bold tracking-tight">UseAI.in.th</span>
         </div>
         <div className="absolute left-1/4 top-0 transform -translate-x-1/2">
           <ThemeSwitcher />
@@ -248,34 +262,55 @@ export default function CheckoutContent() {
                 <p className="text-sm text-green-400 mb-2">Promo code applied!</p>
               )}
               <p className="text-xs mb-4 font-light">One-time payment</p>
-              <Button 
-                onClick={handleCheckout} 
-                disabled={isLoading}
-                className={`w-full py-2 text-sm font-light border-2 border-white flex items-center justify-center mb-2 ${getThemeClasses()}`}
-              >
-                {isLoading ? 'Processing...' : (
-                  <>
-                    <Image
-                      src="/thaiqrpayment.png"
-                      alt="Thai QR Payment"
-                      width={20}
-                      height={20}
-                      className="mr-2"
-                    />
-                    Checkout as Guest
-                  </>
-                )}
-              </Button>
-              {!session && (
-                <div className="text-center mt-4">
-                  <p className="text-sm mb-2">Already have an account?</p>
-                  <Button
-                    onClick={() => signIn()}
-                    className={`w-full py-2 text-sm font-light border-2 border-white ${getThemeClasses()}`}
+              {session ? (
+                <Button 
+                  onClick={handleCheckout} 
+                  disabled={isLoading}
+                  className={`w-full py-2 text-sm font-light border-2 border-white flex items-center justify-center mb-2 ${getThemeClasses()}`}
+                >
+                  {isLoading ? 'Processing...' : (
+                    <>
+                      <Image
+                        src="/thaiqrpayment.png"
+                        alt="Thai QR Payment"
+                        width={20}
+                        height={20}
+                        className="mr-2"
+                      />
+                      Checkout
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <>
+                  <Button 
+                    onClick={handleCheckout} 
+                    disabled={isLoading}
+                    className={`w-full py-2 text-sm font-light border-2 border-white flex items-center justify-center mb-2 ${getThemeClasses()}`}
                   >
-                    Sign In
+                    {isLoading ? 'Processing...' : (
+                      <>
+                        <Image
+                          src="/thaiqrpayment.png"
+                          alt="Thai QR Payment"
+                          width={20}
+                          height={20}
+                          className="mr-2"
+                        />
+                        Checkout as Guest
+                      </>
+                    )}
                   </Button>
-                </div>
+                  <div className="text-center mt-4">
+                    <p className="text-sm mb-2">Already have an account?</p>
+                    <Button
+                      onClick={() => signIn()}
+                      className={`w-full py-2 text-sm font-light border-2 border-white ${getThemeClasses()}`}
+                    >
+                      Sign In
+                    </Button>
+                  </div>
+                </>
               )}
               <div className="mt-4">
                 {guarantees.map((guarantee, index) => (
