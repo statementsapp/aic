@@ -14,19 +14,17 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-2">Quick Links</h3>
             <ul>
               <li><Link href="/">Home</Link></li>
-              <li><Link href="/services">Services</Link></li>
-              <li><Link href="/about">About</Link></li>
+              <li><Link href="/checkout">Send Request</Link></li>
               <li><Link href="/contact">Contact</Link></li>
             </ul>
           </div>
           <div className="w-full md:w-1/4 mb-6 md:mb-0">
             <h3 className="text-lg font-semibold mb-2">Contact</h3>
-            <p>Email: info@useai.th</p>
-            <p>Phone: +1 (123) 456-7890</p>
+            <p>Email: info@useai.in.th</p>
           </div>
         </div>
         <div className="mt-8 text-center">
-          <p>&copy; 2024 UseAI.th. All rights reserved.</p>
+          <p>&copy; 2024 UseAI.in.th. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -41,11 +41,11 @@ export default function Home() {
   const getThemeClasses = () => {
     switch (theme) {
       case 'modern':
-        return 'bg-gray-900 text-white';
+        return 'bg-gradient-modern';
       case 'vibrant':
-        return 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white';
+        return 'bg-gradient-vibrant';
       default:
-        return 'bg-blue-600 text-white';
+        return 'bg-gradient-default';
     }
   };
 
