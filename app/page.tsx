@@ -12,6 +12,7 @@ import { useTheme } from './contexts/ThemeContext'
 import Link from 'next/link'
 import BusinessConsulting from './components/BusinessConsulting'
 import OurWork from './components/OurWork' // Import the OurWork component
+import AIPartners from './components/AIPartners' // Add this new import
 
 function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
@@ -72,6 +73,7 @@ export default function Home() {
             </div>
           </header>
           <Hero />
+          <AIPartners /> {/* Add this new component */}
           <ProcessDescription />
           <OurWork /> {/* Add the OurWork component here */}
           <Testimonials />
