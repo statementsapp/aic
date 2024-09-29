@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { Sparkles} from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -7,8 +8,12 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-xl font-semibold mb-4">About Us</h3>
-            <p>UseAI.th - Empowering your business with AI solutions.</p>
+            <h3 className="text-xl font-semibold mb-4">
+              <Sparkles className="w-8 h-8 mr-2" />
+              <span className="text-2xl font-bold tracking-tight">UseAI</span>
+
+            </h3>
+            
           </div>
           <div>
             <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
