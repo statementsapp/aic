@@ -7,7 +7,7 @@ import Testimonials from './components/Testimonials'
 import Footer from './components/Footer'
 import CookieConsent from './components/CookieConsent'
 import LanguageSelector from './components/LanguageSelector'
-import { Sparkles, Twitter } from 'lucide-react'
+import { Sparkles, Twitter, ArrowUpRight } from 'lucide-react'
 import { useTheme } from './contexts/ThemeContext'
 import Link from 'next/link'
 import BusinessConsulting from './components/BusinessConsulting'
@@ -62,14 +62,15 @@ export default function Home() {
               <Sparkles className="w-8 h-8 mr-2" />
               <span className="text-2xl font-bold tracking-tight">UseAI</span>
             </Link>
-{/*            <div className="absolute left-1/4 top-0 transform -translate-x-1/2">
-              <ThemeSwitcher />
-            </div>*/}
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
               <LanguageSelector />
-{/*              <Link href="https://twitter.com/useaith" target="_blank" rel="noopener noreferrer" className="ml-4">
-                <Twitter className="w-6 h-6 text-blue-400" />
-              </Link>*/}
+              <Link 
+                href="/consultation" 
+                className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300"
+              >
+                <span className="mr-2">Book a Consultation</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
             </div>
           </header>
           <Hero />
