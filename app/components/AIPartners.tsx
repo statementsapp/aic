@@ -24,6 +24,7 @@ export function AIPartners() {
             { name: 'OpenAI', logo: '/openai.png' },
             { name: 'Claude', logo: '/claude.jpg' },
             { name: 'Midjourney', logo: '/midjourney.svg' },
+            { name: 'Grok', logo: '/grok.jpeg' },
           ].map((partner) => (
             <div key={partner.name} className="group">
               <div className={`relative w-24 h-24 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-110 ${partner.name === 'Midjourney' ? 'bg-white' : ''}`}>
