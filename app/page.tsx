@@ -60,16 +60,16 @@ export default function Home() {
           <header className="flex justify-between items-center py-8 relative">
             <Link href="/" className="flex items-center">
               <Sparkles className="w-8 h-8 mr-2" />
-              <span className="text-2xl font-bold tracking-tight">UseAI.th</span>
+              <span className="text-2xl font-bold tracking-tight">UseAI</span>
             </Link>
-            <div className="absolute left-1/4 top-0 transform -translate-x-1/2">
+{/*            <div className="absolute left-1/4 top-0 transform -translate-x-1/2">
               <ThemeSwitcher />
-            </div>
+            </div>*/}
             <div className="flex items-center">
               <LanguageSelector />
-              <Link href="https://twitter.com/useaith" target="_blank" rel="noopener noreferrer" className="ml-4">
+{/*              <Link href="https://twitter.com/useaith" target="_blank" rel="noopener noreferrer" className="ml-4">
                 <Twitter className="w-6 h-6 text-blue-400" />
-              </Link>
+              </Link>*/}
             </div>
           </header>
           <Hero />

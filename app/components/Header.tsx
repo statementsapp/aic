@@ -27,11 +27,11 @@ export default function Header() {
       <Link href="/" className="text-2xl font-bold">
         UseAI
       </Link>
-      <div>
+{/*      <div>
         <button onClick={toggleTheme} className="px-3 py-1 rounded border">
           {theme.charAt(0).toUpperCase() + theme.slice(1)}
         </button>
-      </div>
+      </div>*/}
     </header>
   );
 }

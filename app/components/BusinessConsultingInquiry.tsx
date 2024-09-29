@@ -16,16 +16,16 @@ const inquirySchema = z.object({
 
 type InquiryForm = z.infer<typeof inquirySchema>
 
-function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme()
-  return (
-    <div className="flex space-x-2">
-      <button onClick={() => setTheme('default')} className={`px-2 py-1 rounded text-sm ${theme === 'default' ? 'bg-blue-500' : 'bg-blue-700'}`}>Default</button>
-      <button onClick={() => setTheme('modern')} className={`px-2 py-1 rounded text-sm ${theme === 'modern' ? 'bg-gray-700' : 'bg-gray-900'}`}>Modern</button>
-      <button onClick={() => setTheme('vibrant')} className={`px-2 py-1 rounded text-sm ${theme === 'vibrant' ? 'bg-purple-500' : 'bg-purple-700'}`}>Vibrant</button>
-    </div>
-  )
-}
+// function ThemeSwitcher() {
+//   const { theme, setTheme } = useTheme()
+//   return (
+//     <div className="flex space-x-2">
+//       <button onClick={() => setTheme('default')} className={`px-2 py-1 rounded text-sm ${theme === 'default' ? 'bg-blue-500' : 'bg-blue-700'}`}>Default</button>
+//       <button onClick={() => setTheme('modern')} className={`px-2 py-1 rounded text-sm ${theme === 'modern' ? 'bg-gray-700' : 'bg-gray-900'}`}>Modern</button>
+//       <button onClick={() => setTheme('vibrant')} className={`px-2 py-1 rounded text-sm ${theme === 'vibrant' ? 'bg-purple-500' : 'bg-purple-700'}`}>Vibrant</button>
+//     </div>
+//   )
+// }
 
 function Header() {
   return (
@@ -37,7 +37,7 @@ function Header() {
             <span className="text-2xl font-bold tracking-tight">UseAI.th</span>
           </Link>
           <div className="absolute left-1/4 top-0 transform -translate-x-1/2">
-            <ThemeSwitcher />
+            {/*<ThemeSwitcher />*/}
           </div>
           <div className="flex items-center">
             <Link href="https://twitter.com/useaith" target="_blank" rel="noopener noreferrer" className="ml-4">
