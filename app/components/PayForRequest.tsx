@@ -174,7 +174,7 @@ export default function PayForRequest({ message }: { message: string }) {
           </div>
         </div>
       </div>
-      <div className="text-sm text-gray-400 p-2 absolute bottom-4 right-4 bg-gray-800 rounded-lg shadow-md">
+      <div className="text-sm text-gray-400 p-2 fixed bottom-4 right-4 bg-gray-800 rounded-lg shadow-md z-50">
         Questions? <Link href="mailto:contact@useai.in.th" className="text-blue-400 hover:underline">Contact us</Link>
       </div>
     </div>
