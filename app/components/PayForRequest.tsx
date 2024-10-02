@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { ClipboardCopy, Check, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
@@ -18,6 +18,9 @@ export default function PayForRequest({ message }: { message: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [showPaymentMessage, setShowPaymentMessage] = useState(false);
+  const [qrLoaded, setQrLoaded] = useState(false);
+  const conversationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let i = 0;
@@ -25,24 +28,47 @@ export default function PayForRequest({ message }: { message: string }) {
       if (i < dummyResponse.length) {
         setDisplayedResponse(prev => prev + dummyResponse[i]);
         i++;
+        scrollToBottom();
       } else {
         clearInterval(interval);
         setIsGenerating(false);
         setIsFullyDisplayed(true);
       }
-    }, 20); // Adjusted from 10 to 20 for slightly slower typing
+    }, 20);
 
     return () => clearInterval(interval);
   }, []);
 
+  const scrollToBottom = () => {
+    if (conversationRef.current) {
+      const scrollHeight = conversationRef.current.scrollHeight;
+      const height = conversationRef.current.clientHeight;
+      const maxScrollTop = scrollHeight - height;
+      conversationRef.current.scrollTo({
+        top: maxScrollTop,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (showPaymentMessage) {
+      scrollToBottom();
+    }
+  }, [showPaymentMessage, qrLoaded]);
+
   const handlePayment = () => {
     setIsLoading(true);
-    // Simulate payment process
+    setShowPaymentMessage(true);
     setTimeout(() => {
       setShowQR(true);
       setIsLoading(false);
-      setIsPaid(true); // Set isPaid to true after payment
+      setIsPaid(true);
     }, 1500);
+  };
+
+  const handleQrLoad = () => {
+    setQrLoaded(true);
   };
 
   const copyToClipboard = () => {
@@ -52,41 +78,60 @@ export default function PayForRequest({ message }: { message: string }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex-grow">
-        <div className={`max-w-3xl mx-auto shadow-md rounded-lg overflow-hidden text-gray-100 p-6 border-4 border-white transition-colors duration-300 ${isGenerating ? 'bg-gray-700' : 'bg-gray-800'}`}>
-          <div className="flex flex-col space-y-4">
-            <div className="self-end max-w-[70%]">
-              <div className="bg-blue-600 p-3 rounded-lg">
-                <p className="text-white">{message}</p>
+    <div className="min-h-screen flex flex-col relative">
+      <div className="flex-grow flex flex-col p-4 pb-16">
+        <div className={`max-w-4xl mx-auto w-full shadow-md rounded-lg overflow-hidden text-gray-100 p-6 border-4 border-white transition-colors duration-300 ${isGenerating ? 'bg-gray-700' : 'bg-gray-800'} flex flex-col`}>
+          <div ref={conversationRef} className="flex-grow overflow-y-auto max-h-[calc(100vh-280px)] mb-4">
+            <div className="flex flex-col space-y-4">
+              <div className="self-end max-w-[70%]">
+                <div className="bg-blue-600 p-3 rounded-lg">
+                  <p className="text-white">{message}</p>
+                </div>
               </div>
-            </div>
-            <div 
-              className="self-start max-w-[70%] relative"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <div className="bg-gray-700 p-3 rounded-lg relative">
-                <p className="text-gray-300 whitespace-pre-wrap">{displayedResponse}</p>
-                <div className="absolute top-[75%] left-0 right-0 bottom-0 bg-gradient-to-t from-gray-700 via-gray-700 to-transparent"></div>
+              <div 
+                className="self-start max-w-[70%] relative"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <div className="bg-gray-700 p-3 rounded-lg relative">
+                  <p className="text-gray-300 whitespace-pre-wrap">{displayedResponse}</p>
+                </div>
+                {isFullyDisplayed && isPaid && isHovered && (
+                  <button
+                    onClick={copyToClipboard}
+                    className="absolute top-2 right-2 p-1 rounded-full bg-gray-600 hover:bg-gray-500 transition-colors duration-200"
+                    title="Copy to clipboard"
+                  >
+                    {copied ? (
+                      <Check className="w-5 h-5 text-green-400" />
+                    ) : (
+                      <ClipboardCopy className="w-5 h-5 text-gray-300" />
+                    )}
+                  </button>
+                )}
               </div>
-              {isFullyDisplayed && isPaid && isHovered && (
-                <button
-                  onClick={copyToClipboard}
-                  className="absolute top-2 right-2 p-1 rounded-full bg-gray-600 hover:bg-gray-500 transition-colors duration-200"
-                  title="Copy to clipboard"
-                >
-                  {copied ? (
-                    <Check className="w-5 h-5 text-green-400" />
-                  ) : (
-                    <ClipboardCopy className="w-5 h-5 text-gray-300" />
-                  )}
-                </button>
+              {showPaymentMessage && (
+                <div className={`self-end max-w-[70%] transition-opacity duration-500 ${qrLoaded ? 'opacity-100' : 'opacity-0'}`}>
+                  <div className="bg-blue-600 p-3 rounded-lg flex flex-col items-center">
+                    <p className="text-white text-center">Pay 50 THB</p>
+                    {showQR && (
+                      <div className="mt-2">
+                        <Image 
+                          src="/qr-code.png" 
+                          alt="QR Code" 
+                          width={150} 
+                          height={150} 
+                          onLoad={handleQrLoad}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </div>
-          <div className="mt-8">
-            {!showQR ? (
+          <div className="mt-auto">
+            {!showPaymentMessage ? (
               <div>
                 <button
                   onClick={handlePayment}
@@ -114,16 +159,11 @@ export default function PayForRequest({ message }: { message: string }) {
                   )}
                 </button>
               </div>
-            ) : (
-              <div className="flex flex-col items-center">
-                <h3 className="text-xl font-semibold mb-4">Scan QR Code to Pay</h3>
-                <Image src="/qr-code.png" alt="QR Code" width={200} height={200} />
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
-      <div className="text-sm text-gray-400 p-4 text-right">
+      <div className="text-sm text-gray-400 p-4 absolute bottom-0 right-0">
         Questions? <Link href="mailto:contact@useai.in.th" className="text-blue-400 hover:underline">Contact us</Link>
       </div>
     </div>
