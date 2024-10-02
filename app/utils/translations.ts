@@ -72,6 +72,11 @@ export const translations = {
       messagePlaceholder: 'Enter your message',
       submitButton: 'Submit Inquiry'
     },
+    chatbot: {
+      messageLabel: "Your message",
+      messagePlaceholder: "Type your message here...",
+      sendButton: "Send",
+    },
     // Add more translations as needed
   },
   th: {
@@ -140,6 +145,11 @@ export const translations = {
       messageLabel: 'ข้อความของคุณ',
       messagePlaceholder: 'กรอกข้อความของคุณ',
       submitButton: 'ส่งแบบสอบถาม'
+    },
+    chatbot: {
+      messageLabel: "ข้อความของคุณ",
+      messagePlaceholder: "พิมพ์ข้อความของคุณที่นี่...",
+      sendButton: "ส่ง",
     },
     // Add more translations as needed
   },
