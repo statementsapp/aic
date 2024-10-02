@@ -3,25 +3,23 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { translations } from '../utils/translations';
+import { useRouter } from 'next/navigation';
 
 export default function Chatbot() {
   const { language } = useLanguage();
   const t = translations[language].chatbot;
   const [message, setMessage] = useState('');
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle chat submission logic here
-    console.log('Submitted message:', message);
-    setMessage('');
+    if (!message.trim()) return;
+    router.push(`/pay-for-request?message=${encodeURIComponent(message)}`);
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg shadow-md">
       <div className="mb-4 flex flex-col">
-        {/* <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2 self-end">
-          {t.messageLabel}
-        </label> */}
         <textarea
           id="message"
           name="message"

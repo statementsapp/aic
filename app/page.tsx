@@ -13,6 +13,7 @@ import Link from 'next/link'
 import BusinessConsulting from './components/BusinessConsulting'
 import OurWork from './components/OurWork' // Import the OurWork component
 import AIPartners from './components/AIPartners' // Add this new import
+import Chatbot from './components/Chatbot';
 
 function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
@@ -79,6 +80,7 @@ export default function Home() {
           <OurWork /> {/* Add the OurWork component here */}
           <Testimonials />
           <BusinessConsulting />
+          <Chatbot />
         </div>
         <Footer />
         <CookieConsent onAccept={() => setCookieConsentShown(false)} onDecline={() => setCookieConsentShown(false)} />
