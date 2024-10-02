@@ -79,7 +79,7 @@ export default function PayForRequest({ message }: { message: string }) {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      <div className="flex-grow flex flex-col p-4 pb-16">
+      <div className="flex-grow flex flex-col p-4">
         <div className={`max-w-4xl mx-auto w-full shadow-md rounded-lg overflow-hidden text-gray-100 p-6 border-4 border-white transition-colors duration-300 ${isGenerating ? 'bg-gray-700' : 'bg-gray-800'} flex flex-col`}>
           <div ref={conversationRef} className="flex-grow overflow-y-auto max-h-[calc(100vh-280px)] mb-4">
             <div className="flex flex-col space-y-4">
@@ -94,7 +94,18 @@ export default function PayForRequest({ message }: { message: string }) {
                 onMouseLeave={() => setIsHovered(false)}
               >
                 <div className="bg-gray-700 p-3 rounded-lg relative">
-                  <p className="text-gray-300 whitespace-pre-wrap">{displayedResponse}</p>
+                  <p className="text-gray-300 whitespace-pre-wrap">
+                    {displayedResponse.split('\n\n')[0]}
+                    {displayedResponse.split('\n\n')[1] && (
+                      <>
+                        <br /><br />
+                        <span className="relative">
+                          {displayedResponse.split('\n\n')[1]}
+                          <span className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-700/50 to-gray-700"></span>
+                        </span>
+                      </>
+                    )}
+                  </p>
                 </div>
                 {isFullyDisplayed && isPaid && isHovered && (
                   <button
@@ -163,7 +174,7 @@ export default function PayForRequest({ message }: { message: string }) {
           </div>
         </div>
       </div>
-      <div className="text-sm text-gray-400 p-4 absolute bottom-0 right-0">
+      <div className="text-sm text-gray-400 p-2 absolute bottom-4 right-4 bg-gray-800 rounded-lg shadow-md">
         Questions? <Link href="mailto:contact@useai.in.th" className="text-blue-400 hover:underline">Contact us</Link>
       </div>
     </div>

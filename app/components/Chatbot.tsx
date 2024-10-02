@@ -18,7 +18,7 @@ export default function Chatbot() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto mt-4">
+    <div className="w-full max-w-3xl mx-auto mt-2"> {/* Changed from max-w-md to max-w-3xl and mt-4 to mt-2 */}
       <form onSubmit={handleSubmit} className="relative">
         <div className="mb-4 flex flex-col">
           <textarea

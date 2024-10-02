@@ -75,6 +75,9 @@ export default function Home() {
             </div>
           </header>
           <Hero />
+          <div className="mt-8"> {/* Add this wrapper div with mt-8 class */}
+            <Chatbot />
+          </div>
           <AIPartners /> {/* Add this new component */}
           <ProcessDescription />
           <OurWork /> {/* Add the OurWork component here */}
