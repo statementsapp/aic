@@ -43,6 +43,7 @@ export default function Chatbot() {
 
   return (
     <div className="w-full max-w-3xl mx-auto -mt-24">
+      <h2>What do you want AI to make for you?</h2>
       <form onSubmit={handleSubmit} className="relative">
         <div className="mb-4 flex flex-col">
           <textarea

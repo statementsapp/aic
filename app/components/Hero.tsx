@@ -49,10 +49,10 @@ export default function Hero() {
             Best AI Chatbot
           </h1>
           <p className="text-xl mb-2 max-w-2xl mx-auto font-light">
-            Experience the future of customer interaction with our state-of-the-art AI chatbot.
+            Experience the future with our state-of-the-art AI chatbot. Generate high-quality text and images
           </p>
           <p className="text-lg mb-6 max-w-2xl mx-auto font-light">
-            Seamlessly handle inquiries, provide instant support, and elevate your customer service to unprecedented levels.
+            Instant responses for a low price per request
           </p>
         </>
       ),
