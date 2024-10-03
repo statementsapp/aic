@@ -22,6 +22,7 @@ export default function Chatbot() {
   const t = translations[language].chatbot;
   const [message, setMessage] = useState('');
   const [choices, setChoices] = useState<typeof prompts>([]);
+  const [choicesVisible, setChoicesVisible] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,12 +39,14 @@ export default function Chatbot() {
 
   const handleChoiceClick = (fullPrompt: string) => {
     setMessage(fullPrompt);
-    setChoices([]);
+    setChoicesVisible(false);
   };
 
   return (
     <div className="w-full max-w-3xl mx-auto -mt-24">
-      <h2>What do you want AI to make for you?</h2>
+      <h3 className="text-4xl font-bold text-left mb-8 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
+        What do you want AI to make for you?
+      </h3>
       <form onSubmit={handleSubmit} className="relative">
         <div className="mb-4 flex flex-col">
           <textarea
@@ -63,12 +66,17 @@ export default function Chatbot() {
           {t.sendButton}
         </button>
         {choices.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
+          <div 
+            className={`flex flex-wrap justify-center gap-2 mt-4 transition-opacity duration-300 ${
+              choicesVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
             {choices.map((choice, index) => (
               <button
                 key={index}
                 onClick={() => handleChoiceClick(choice.full)}
                 className="bg-gray-700 text-gray-300 py-2 px-4 rounded-full hover:bg-gray-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={!choicesVisible}
               >
                 {choice.short}
               </button>

@@ -18,6 +18,17 @@ export default function PayForRequest({ message }: { message: string }) {
       <div className="flex-grow flex flex-col p-4">
         <div className={`max-w-4xl mx-auto w-full shadow-md rounded-lg overflow-hidden text-gray-100 p-6 border-4 border-white transition-colors duration-300 ${isGenerating ? 'bg-gray-700' : 'bg-gray-800'} flex flex-col`}>
           {/* ... (keep all the existing JSX for the conversation and payment button) */}
+          
+          {response && (
+            <div className="mt-4 relative">
+              <div className="whitespace-pre-wrap text-gray-300 relative z-10">
+                {response}
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-800/70 to-gray-800 pointer-events-none"></div>
+            </div>
+          )}
+          
+          {/* ... rest of the existing JSX ... */}
         </div>
       </div>
       <Footer />
