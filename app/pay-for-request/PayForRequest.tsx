@@ -14,15 +14,31 @@ export default function PayForRequest({ message }: { message: string }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
 
-  // ... (keep all the existing state and functions)
-
-  const handleGenerateResponse = () => {
+  const handleGenerateResponse = async () => {
     setIsGenerating(true);
-    // Simulate API call
-    setTimeout(() => {
-      setResponse(dummyResponse);
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: message }],
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to generate response');
+      }
+
+      const data = await res.json();
+      setResponse(data.content);
+    } catch (error) {
+      console.error('Error generating response:', error);
+      setResponse('An error occurred while generating the response.');
+    } finally {
       setIsGenerating(false);
-    }, 2000);
+    }
   };
 
   return (
