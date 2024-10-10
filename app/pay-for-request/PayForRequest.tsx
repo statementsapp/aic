@@ -13,9 +13,11 @@ interface PayForRequestProps {
 export default function PayForRequest({ message }: PayForRequestProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGenerateResponse = async () => {
     setIsGenerating(true);
+    setError(null);
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -28,14 +30,16 @@ export default function PayForRequest({ message }: PayForRequestProps) {
       });
 
       if (!res.ok) {
-        throw new Error('Failed to generate response');
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to generate response');
       }
 
       const data = await res.json();
       setResponse(data.content);
     } catch (error) {
       console.error('Error generating response:', error);
-      setResponse('An error occurred while generating the response.');
+      setError(error instanceof Error ? error.message : 'An unknown error occurred');
+      setResponse(null);
     } finally {
       setIsGenerating(false);
     }
@@ -45,7 +49,6 @@ export default function PayForRequest({ message }: PayForRequestProps) {
     <div className="min-h-screen flex flex-col">
       <div className="flex-grow flex flex-col p-4">
         <div className={`max-w-4xl mx-auto w-full shadow-md rounded-lg overflow-hidden text-gray-100 p-6 border-4 border-white transition-colors duration-300 ${isGenerating ? 'bg-gray-700' : 'bg-gray-800'} flex flex-col`}>
-          {/* Display the message */}
           <div className="mb-4">
             <h2 className="text-xl font-bold">Message:</h2>
             <p>{message}</p>
@@ -58,6 +61,12 @@ export default function PayForRequest({ message }: PayForRequestProps) {
           >
             {isGenerating ? 'Generating...' : 'Generate Response'}
           </button>
+          
+          {error && (
+            <div className="mt-4 text-red-500">
+              Error: {error}
+            </div>
+          )}
           
           {response && (
             <div className="mt-4 relative">
