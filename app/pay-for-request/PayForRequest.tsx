@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { ClipboardCopy, Check, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import Footer from './Footer';
 
-export default function PayForRequest() {
-  const searchParams = useSearchParams();
-  const message = searchParams.get('message') || '';
+interface PayForRequestProps {
+  message: string;
+}
+
+export default function PayForRequest({ message }: PayForRequestProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
 
