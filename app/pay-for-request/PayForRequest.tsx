@@ -1,17 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { ClipboardCopy, Check, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import Footer from './Footer';
 
-const dummyResponse = `    This is a dummy response in the style of Grok. It's witty, informative, and slightly irreverent. The response continues with more details and interesting facts. Here's some more text to make it longer and more engaging for the reader.
-
-    Now, let's dive into a second paragraph of this dummy text. We'll explore some hypothetical scenarios, throw in a few jokes, and maybe even a dash of sarcasm. After all, that's what you'd expect from a chatbot trying to emulate the style of Grok, right? Remember, the key to great AI is not just accuracy, but also personality!`;
-
-function PayForRequestContent() {
+export default function PayForRequest() {
   const searchParams = useSearchParams();
   const message = searchParams.get('message') || '';
   const [isGenerating, setIsGenerating] = useState(false);
@@ -74,13 +70,5 @@ function PayForRequestContent() {
       </div>
       <Footer />
     </div>
-  );
-}
-
-export default function PayForRequest() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <PayForRequestContent />
-    </Suspense>
   );
 }

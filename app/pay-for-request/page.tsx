@@ -1,16 +1,13 @@
 "use client";
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import PayForRequest from '../components/PayForRequest';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Sparkles, ArrowUpRight } from 'lucide-react';
 import LanguageSelector from '../components/LanguageSelector';
 import { useTheme } from '../contexts/ThemeContext';
 
-export default function PayForRequestPage() {
-  const searchParams = useSearchParams();
-  const message = searchParams.get('message') || '';
+function PayForRequestContent() {
   const { theme } = useTheme();
 
   const getThemeClasses = () => {
@@ -44,9 +41,17 @@ export default function PayForRequestPage() {
           </div>
         </header>
         <div className="py-8">
-          <PayForRequest message={message} />
+          <PayForRequest />
         </div>
       </div>
     </main>
+  );
+}
+
+export default function PayForRequestPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PayForRequestContent />
+    </Suspense>
   );
 }
