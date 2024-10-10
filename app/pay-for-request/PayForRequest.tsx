@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { ClipboardCopy, Check, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
@@ -10,7 +11,9 @@ const dummyResponse = `    This is a dummy response in the style of Grok. It's w
 
     Now, let's dive into a second paragraph of this dummy text. We'll explore some hypothetical scenarios, throw in a few jokes, and maybe even a dash of sarcasm. After all, that's what you'd expect from a chatbot trying to emulate the style of Grok, right? Remember, the key to great AI is not just accuracy, but also personality!`;
 
-export default function PayForRequest({ message }: { message: string }) {
+function PayForRequestContent() {
+  const searchParams = useSearchParams();
+  const message = searchParams.get('message') || '';
   const [isGenerating, setIsGenerating] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
 
@@ -45,7 +48,11 @@ export default function PayForRequest({ message }: { message: string }) {
     <div className="min-h-screen flex flex-col">
       <div className="flex-grow flex flex-col p-4">
         <div className={`max-w-4xl mx-auto w-full shadow-md rounded-lg overflow-hidden text-gray-100 p-6 border-4 border-white transition-colors duration-300 ${isGenerating ? 'bg-gray-700' : 'bg-gray-800'} flex flex-col`}>
-          {/* ... (keep all the existing JSX for the conversation and payment button) */}
+          {/* Display the message */}
+          <div className="mb-4">
+            <h2 className="text-xl font-bold">Message:</h2>
+            <p>{message}</p>
+          </div>
           
           <button
             onClick={handleGenerateResponse}
@@ -63,11 +70,17 @@ export default function PayForRequest({ message }: { message: string }) {
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-800/70 to-gray-800 pointer-events-none"></div>
             </div>
           )}
-          
-          {/* ... rest of the existing JSX ... */}
         </div>
       </div>
       <Footer />
     </div>
+  );
+}
+
+export default function PayForRequest() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PayForRequestContent />
+    </Suspense>
   );
 }
