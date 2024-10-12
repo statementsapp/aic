@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
 import Footer from './Footer';
+import Image from 'next/image';
 
 interface PayForRequestProps {
   message: string;
@@ -12,10 +13,21 @@ export default function PayForRequest({ message }: PayForRequestProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showPayment, setShowPayment] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [response, showPayment]);
 
   const handleGenerateResponse = async () => {
     setIsGenerating(true);
     setError(null);
+    setResponse(null);
+    setShowPayment(false);
+
     try {
       const res = await fetch('/api/openai', {
         method: 'POST',
@@ -27,17 +39,28 @@ export default function PayForRequest({ message }: PayForRequestProps) {
         }),
       });
 
-      const data = await res.json();
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error('Failed to get response reader');
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to generate response');
+      let partialResponse = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        const chunk = new TextDecoder().decode(value);
+        partialResponse += chunk;
+        
+        if (partialResponse.split('\n').length >= 3) {
+          const lines = partialResponse.split('\n').slice(0, 3);
+          setResponse(lines.join('\n') + '...');
+          break;
+        }
       }
 
-      setResponse(data.content);
+      setTimeout(() => setShowPayment(true), 1000);
     } catch (error) {
       console.error('Error generating response:', error);
       setError(error instanceof Error ? error.message : 'An unknown error occurred');
-      setResponse(null);
     } finally {
       setIsGenerating(false);
     }
@@ -46,10 +69,22 @@ export default function PayForRequest({ message }: PayForRequestProps) {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex-grow flex flex-col p-4">
-        <div className={`max-w-4xl mx-auto w-full shadow-md rounded-lg overflow-hidden text-gray-100 p-6 border-4 border-white transition-colors duration-300 ${isGenerating ? 'bg-gray-700' : 'bg-gray-800'} flex flex-col`}>
-          <div className="mb-4">
-            <h2 className="text-xl font-bold">Message:</h2>
-            <p>{message}</p>
+        <div className="max-w-4xl mx-auto w-full shadow-md rounded-lg overflow-hidden text-gray-100 p-6 border-4 border-white bg-gray-800 flex flex-col">
+          <div ref={chatContainerRef} className="flex flex-col space-y-4 mb-4 h-96 overflow-y-auto">
+            <div className="self-end bg-blue-500 rounded-lg p-3 max-w-[70%]">
+              {message}
+            </div>
+            {response && (
+              <div className="self-start bg-gray-700 rounded-lg p-3 max-w-[70%]">
+                {response}
+              </div>
+            )}
+            {showPayment && (
+              <div className="self-end bg-green-500 rounded-lg p-3 max-w-[70%] flex flex-col items-center">
+                <p className="mb-2">Pay 50 THB</p>
+                <Image src="/qr-code.png" alt="QR Code" width={150} height={150} />
+              </div>
+            )}
           </div>
           
           <button
@@ -63,22 +98,13 @@ export default function PayForRequest({ message }: PayForRequestProps) {
                 Generating...
               </>
             ) : (
-              'Generate Response'
+              'Generate'
             )}
           </button>
           
           {error && (
             <div className="mt-4 text-red-500">
               Error: {error}
-            </div>
-          )}
-          
-          {response && (
-            <div className="mt-4 relative">
-              <div className="whitespace-pre-wrap text-gray-300 relative z-10">
-                {response}
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-800/70 to-gray-800 pointer-events-none"></div>
             </div>
           )}
         </div>

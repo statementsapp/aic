@@ -6,19 +6,26 @@ const openai = new OpenAI({
 });
 
 export async function POST(req: Request) {
-  try {
-    const { message } = await req.json();
+  const { message } = await req.json();
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: message }],
-    });
+  const stream = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: message }],
+    stream: true,
+  });
 
-    const content = completion.choices[0].message.content;
+  const encoder = new TextEncoder();
+  const readable = new ReadableStream({
+    async start(controller) {
+      for await (const part of stream) {
+        const text = part.choices[0]?.delta?.content || '';
+        controller.enqueue(encoder.encode(text));
+      }
+      controller.close();
+    },
+  });
 
-    return NextResponse.json({ content });
-  } catch (error) {
-    console.error('OpenAI API error:', error);
-    return NextResponse.json({ error: 'Failed to generate response' }, { status: 500 });
-  }
+  return new Response(readable, {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
 }
