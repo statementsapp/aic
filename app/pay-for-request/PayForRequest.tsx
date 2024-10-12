@@ -52,7 +52,9 @@ export default function PayForRequest({ message }: PayForRequestProps) {
         
         const lines = partialResponse.split('\n');
         if (lines.length >= 3) {
-          setResponse(lines.slice(0, 3).join('\n') + '...');
+          const truncatedResponse = lines.slice(0, 3).join('\n') + '...';
+          setResponse(truncatedResponse);
+          console.log('Response:', truncatedResponse);
           break;
         }
       }
