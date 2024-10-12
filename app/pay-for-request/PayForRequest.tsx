@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import Image from 'next/image';
-import { ClipboardCopy, Check, RefreshCw } from 'lucide-react';
-import Link from 'next/link';
+import { RefreshCw } from 'lucide-react';
 import Footer from './Footer';
 
 interface PayForRequestProps {
@@ -19,7 +17,7 @@ export default function PayForRequest({ message }: PayForRequestProps) {
     setIsGenerating(true);
     setError(null);
     try {
-      const res = await fetch('/api/claude', {
+      const res = await fetch('/api/openai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,9 +55,16 @@ export default function PayForRequest({ message }: PayForRequestProps) {
           <button
             onClick={handleGenerateResponse}
             disabled={isGenerating}
-            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded flex items-center justify-center"
           >
-            {isGenerating ? 'Generating...' : 'Generate Response'}
+            {isGenerating ? (
+              <>
+                <RefreshCw className="animate-spin mr-2" size={20} />
+                Generating...
+              </>
+            ) : (
+              'Generate Response'
+            )}
           </button>
           
           {error && (
