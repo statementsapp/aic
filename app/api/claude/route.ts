@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const CLAUDE_API_ENDPOINT = 'https://api.anthropic.com/v1/messages';
 
@@ -26,6 +26,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ content: response.data.content[0].text });
   } catch (error) {
     console.error('Error calling Claude API:', error);
-    return NextResponse.json({ error: 'Failed to generate response from Claude' }, { status: 500 });
+    
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      return NextResponse.json({ 
+        error: `Claude API Error: ${axiosError.message}`,
+        details: axiosError.response?.data
+      }, { status: axiosError.response?.status || 500 });
+    }
+    
+    return NextResponse.json({ 
+      error: 'Failed to generate response from Claude',
+      details: (error as Error).message
+    }, { status: 500 });
   }
 }

@@ -29,12 +29,12 @@ export default function PayForRequest({ message }: PayForRequestProps) {
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to generate response');
+        throw new Error(data.error || 'Failed to generate response');
       }
 
-      const data = await res.json();
       setResponse(data.content);
     } catch (error) {
       console.error('Error generating response:', error);
