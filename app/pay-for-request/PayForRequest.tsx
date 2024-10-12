@@ -50,9 +50,9 @@ export default function PayForRequest({ message }: PayForRequestProps) {
         const chunk = new TextDecoder().decode(value);
         partialResponse += chunk;
         
-        if (partialResponse.split('\n').length >= 3) {
-          const lines = partialResponse.split('\n').slice(0, 3);
-          setResponse(lines.join('\n') + '...');
+        const lines = partialResponse.split('\n');
+        if (lines.length >= 3) {
+          setResponse(lines.slice(0, 3).join('\n') + '...');
           break;
         }
       }
